@@ -1,0 +1,38 @@
+/* Dashboard-specific snippets for Sigurna Banka */
+@import "./sigurna-tokens.css";
+
+.sg-hero {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.sg-hero .card {
+  flex: 1;
+}
+.sg-transactions {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 10px;
+}
+.transaction-item.income .amount {
+  color: var(--success);
+}
+.transaction-item.outcome .amount {
+  color: var(--danger);
+}
+.sg-accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* Quick actions */
+.sg-quick-actions button {
+  width: 100%;
+}

@@ -1,0 +1,110 @@
+/* Sigurna Banka - Design Tokens and Base Styles (dark glassmorphism) */
+:root {
+  /* Colors */
+  --bg-1: #0b0d10; /* deep charcoal */
+  --bg-2: linear-gradient(135deg, #07080a 0%, #0f1113 100%);
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent-red: #e53935; /* primary action */
+  --accent-red-600: #d32f2f;
+  --muted: #9aa3ad;
+  --text-primary: #ffffff;
+  --text-secondary: #dfe6ea;
+  --success: #4caf50;
+  --warning: #ffb300;
+  --danger: #ff7043;
+
+  /* Typography */
+  --font-sans: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --type-lg: 28px;
+  --type-md: 16px;
+  --type-sm: 13px;
+
+  /* Spacing */
+  --space-xs: 6px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 28px;
+
+  /* Radii & Elevation */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --elevation-1: 0 6px 18px rgba(2, 6, 12, 0.6);
+  --glass-blur: 12px;
+}
+
+/* Base body for app */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg-2);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glass card: use this as the primary container style */
+.sg-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-1);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  padding: var(--space-md);
+  color: var(--text-primary);
+}
+
+.sg-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.sg-stat {
+  font-weight: 700;
+  font-size: var(--type-lg);
+  color: var(--text-primary);
+}
+
+.sg-accent-btn {
+  background: linear-gradient(90deg, var(--accent-red), var(--accent-red-600));
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.sg-muted {
+  color: var(--muted);
+}
+
+/* Masked sensitive data */
+.sg-masked {
+  letter-spacing: 2px;
+  -webkit-text-security: disc;
+}
+
+/* Utility: small metadata */
+.sg-meta {
+  font-size: var(--type-sm);
+  color: var(--text-secondary);
+}
+
+/* Responsive hints */
+@media (max-width: 768px) {
+  .sg-stat {
+    font-size: 20px;
+  }
+  .sg-glass {
+    padding: var(--space-sm);
+  }
+}
+
+/* End of sigurna-tokens.css */

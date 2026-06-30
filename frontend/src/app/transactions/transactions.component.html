@@ -1,0 +1,16 @@
+<section class="transactions-list">
+  <sg-glass-card *ngFor="let t of transactions">
+    <div class="card-header">
+      <div>
+        <div class="sg-meta">{{ t.desc }}</div>
+        <div class="sg-meta">{{ t.date }}</div>
+      </div>
+      <div
+        class="amount"
+        [ngClass]="{ income: t.amount > 0, outcome: t.amount < 0 }"
+      >
+        {{ t.amount | number: "1.2-2" }} HRK
+      </div>
+    </div>
+  </sg-glass-card>
+</section>

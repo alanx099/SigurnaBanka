@@ -1,0 +1,51 @@
+<a class="back" routerLink="/admin/users">← Povratak na korisnike</a>
+@if (error) {
+  <div class="error detail-error">{{ error }}</div>
+} @else if (!user) {
+  <div class="loading">Učitavanje profila...</div>
+} @else {
+  <header class="profile-head glass">
+    <div class="avatar">{{ user.first_name[0] }}{{ user.last_name[0] }}</div>
+    <div>
+      <span class="eyebrow">KORISNIČKI PROFIL #{{ user.id }}</span>
+      <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+      <p>{{ user.email }}</p>
+    </div>
+    <span class="badge" [class.blocked]="!user.active">{{
+      user.active ? "AKTIVAN" : "NEAKTIVAN"
+    }}</span>
+  </header>
+  <form class="glass details form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <div class="full title">
+      <span class="eyebrow">PRAVA I IDENTITET</span>
+      <h2>Administrativne postavke</h2>
+    </div>
+    <label>Ime<input class="input" formControlName="firstName" /></label
+    ><label>Prezime<input class="input" formControlName="lastName" /></label
+    ><label
+      >Razina pristupa<select class="input" formControlName="role">
+        <option value="USER">Korisnik</option>
+        <option value="ADMIN">Administrator</option>
+      </select></label
+    ><label
+      >Status<select class="input" formControlName="active">
+        <option [ngValue]="true">Aktivan</option>
+        <option [ngValue]="false">Deaktiviran</option>
+      </select></label
+    >
+    <div class="meta full">
+      Profil otvoren: {{ user.created_at | date: "dd.MM.yyyy. HH:mm" }} ·
+      Lozinka je spremljena isključivo kao sigurni hash.
+    </div>
+    <div class="actions full">
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="user.id === auth.user()?.id"
+        (click)="remove()"
+      >
+        Obriši korisnika</button
+      ><button class="btn btn-primary">Spremi promjene</button>
+    </div>
+  </form>
+}

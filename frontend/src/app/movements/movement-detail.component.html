@@ -1,0 +1,38 @@
+<a class="back" [routerLink]="['/', kind]"
+  >← Povratak na {{ kind === "deposits" ? "uplate" : "isplate" }}</a
+>
+@if (error) {
+  <div class="error detail-error">{{ error }}</div>
+} @else if (!item) {
+  <div class="loading">Učitavanje detalja...</div>
+} @else {
+  <section class="receipt glass">
+    <div class="receipt-icon" [class.out]="kind === 'withdrawals'">
+      {{ kind === "deposits" ? "↙" : "↗" }}
+    </div>
+    <span class="eyebrow">TRANSAKCIJA #{{ item.id }}</span>
+    <h1>
+      {{ item.description || (kind === "deposits" ? "Uplata" : "Isplata") }}
+    </h1>
+    <strong class="money" [class.in]="kind === 'deposits'"
+      >{{ kind === "deposits" ? "+" : "−" }}
+      {{ item.amount | currency: "EUR" : "symbol" : "1.2-2" : "hr" }}</strong
+    ><span class="badge">PROVEDENO</span>
+    <div class="receipt-grid">
+      <div>
+        <small>DATUM I VRIJEME</small
+        ><b>{{ item.created_at | date: "dd.MM.yyyy. HH:mm" }}</b>
+      </div>
+      <div>
+        <small>REFERENCA</small><b>{{ item.reference || "—" }}</b>
+      </div>
+      <div>
+        <small>RAČUN</small><b>{{ item.account_name }}</b>
+      </div>
+      <div>
+        <small>IBAN</small><b>{{ item.iban | maskedIban }}</b>
+      </div>
+    </div>
+    <p>✓ Transakcija je sigurno evidentirana i stanje računa je ažurirano.</p>
+  </section>
+}

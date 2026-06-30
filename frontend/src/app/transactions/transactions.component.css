@@ -1,0 +1,17 @@
+.transactions-list {
+  display: grid;
+  gap: 12px;
+}
+.transactions-list sg-glass {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.amount.income {
+  color: var(--success);
+  font-weight: 700;
+}
+.amount.outcome {
+  color: var(--danger);
+  font-weight: 700;
+}

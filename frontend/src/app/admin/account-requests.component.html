@@ -1,0 +1,106 @@
+<header class="page-header">
+  <div>
+    <span class="eyebrow">BANKARSKE OPERACIJE</span>
+    <h1>Zahtjevi za račune</h1>
+    <p>
+      Pregledajte zahtjev, donesite odluku i jasno je komunicirajte korisniku.
+    </p>
+  </div>
+  <span class="pending-count">{{ pending.length }} NA ČEKANJU</span>
+</header>
+@if (error) {
+  <div class="error notice">{{ error }}</div>
+}
+@if (notice) {
+  <div class="success notice">✓ {{ notice }}</div>
+}
+@if (loading) {
+  <div class="loading">Učitavanje zahtjeva...</div>
+} @else {
+  <section class="queue">
+    <div class="section-heading">
+      <span class="eyebrow">ZA OBRADU</span>
+      <h2>Novi zahtjevi</h2>
+    </div>
+    @for (r of pending; track r.id) {
+      <article class="request-card glass">
+        <div class="request-main">
+          <div class="avatar">
+            {{ r.first_name?.[0] }}{{ r.last_name?.[0] }}
+          </div>
+          <div class="customer">
+            <h3>{{ r.first_name }} {{ r.last_name }}</h3>
+            <p>{{ r.email }}</p>
+            <small
+              >Predano {{ r.created_at | date: "dd.MM.yyyy. HH:mm" }}</small
+            >
+          </div>
+          <div class="product">
+            <small>TRAŽENI PROIZVOD</small
+            ><strong>{{ typeLabel(r.account_type) }}</strong
+            ><span>{{ r.requested_name }}</span>
+          </div>
+        </div>
+        @if (r.user_message) {
+          <blockquote>“{{ r.user_message }}”</blockquote>
+        }
+        <label
+          >Poruka korisniku<textarea
+            class="input"
+            rows="2"
+            [value]="responses[r.id] || ''"
+            (input)="setResponse(r.id, $event)"
+            placeholder="Obavezno za odbijanje; opcionalno za odobrenje"
+          ></textarea>
+        </label>
+        <div class="request-actions">
+          <button
+            class="btn btn-danger"
+            [disabled]="processing === r.id"
+            (click)="review(r, 'REJECT')"
+          >
+            Odbij zahtjev</button
+          ><button
+            class="btn btn-primary"
+            [disabled]="processing === r.id"
+            (click)="review(r, 'APPROVE')"
+          >
+            {{ processing === r.id ? "Obrada..." : "Odobri i otvori račun" }}
+          </button>
+        </div>
+      </article>
+    } @empty {
+      <div class="glass empty">Odlično — nema zahtjeva koji čekaju obradu.</div>
+    }
+  </section>
+  @if (processed.length) {
+    <section class="processed glass">
+      <div class="section-heading">
+        <span class="eyebrow">ARHIVA ODLUKA</span>
+        <h2>Obrađeni zahtjevi</h2>
+      </div>
+      @for (r of processed; track r.id) {
+        <div class="processed-row">
+          <span class="decision" [class.rejected]="r.status === 'REJECTED'">{{
+            r.status === "APPROVED" ? "✓" : "×"
+          }}</span>
+          <div>
+            <strong
+              >{{ r.first_name }} {{ r.last_name }} ·
+              {{ typeLabel(r.account_type) }}</strong
+            ><small
+              >{{ r.admin_message }} ·
+              {{ r.reviewed_at | date: "dd.MM.yyyy. HH:mm" }}</small
+            >
+          </div>
+          <span class="status" [class.rejected]="r.status === 'REJECTED'">{{
+            r.status === "APPROVED" ? "ODOBRENO" : "ODBIJENO"
+          }}</span>
+          @if (r.created_account_id) {
+            <a [routerLink]="['/accounts', r.created_account_id]">Račun →</a>
+          }
+        </div>
+      }
+    </section>
+  }
+}

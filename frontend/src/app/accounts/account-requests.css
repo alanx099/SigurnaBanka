@@ -1,0 +1,84 @@
+.request-notice {
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(51, 214, 159, 0.2);
+  background: rgba(51, 214, 159, 0.08);
+  border-radius: 11px;
+}
+.request-intro h2,
+.request-title h2 {
+  font: 700 19px Manrope;
+  margin: 5px 0;
+}
+.request-intro p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0;
+}
+.request-history {
+  padding: 24px;
+  margin-top: 22px;
+}
+.request-title {
+  margin-bottom: 12px;
+}
+.request-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 3px;
+  border-top: 1px solid var(--line);
+}
+.request-kind {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(225, 29, 46, 0.1);
+  color: var(--red-light);
+}
+.request-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+}
+.request-row p {
+  font-size: 11px;
+  color: var(--green);
+  margin: 8px 0 0;
+}
+.request-row p.rejected-message {
+  color: #ff939b;
+}
+.request-status {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--amber);
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: rgba(244, 183, 64, 0.1);
+}
+.request-status.approved {
+  color: var(--green);
+  background: rgba(51, 214, 159, 0.1);
+}
+.request-status.rejected {
+  color: var(--red-light);
+  background: rgba(225, 29, 46, 0.1);
+}
+.request-row .btn {
+  text-decoration: none;
+}
+@media (max-width: 700px) {
+  .request-row {
+    grid-template-columns: 40px 1fr;
+  }
+  .request-status,
+  .request-row .btn {
+    grid-column: 2;
+    width: max-content;
+  }
+}

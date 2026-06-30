@@ -1,0 +1,18 @@
+.app-shell {
+  min-height: 100vh;
+}
+.page-shell {
+  margin-left: 260px;
+  padding: 38px 44px;
+  min-height: 100vh;
+}
+.public-shell .page-shell {
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 900px) {
+  .page-shell {
+    margin-left: 0;
+    padding: 26px 18px calc(98px + env(safe-area-inset-bottom));
+  }
+}

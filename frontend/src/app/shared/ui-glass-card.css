@@ -1,0 +1,36 @@
+/* Example component CSS: glass card skeleton for developer reference */
+.ui-glass-card {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.ui-glass-card .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ui-glass-card .body {
+  margin-top: 12px;
+}
+.ui-glass-card .actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Example usage in template:
+<div class="sg-glass ui-glass-card">
+  <div class="header">
+    <div>
+      <div class="sg-meta">Account</div>
+      <div class="sg-stat">3,542.50 HRK</div>
+    </div>
+    <div class="actions">
+      <button class="sg-accent-btn">Transfer</button>
+      <button class="sg-accent-btn" style="background:transparent;border:1px solid var(--glass-border);">Details</button>
+    </div>
+  </div>
+  <div class="body sg-meta">IBAN • **** **** 1234</div>
+</div>
+*/

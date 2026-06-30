@@ -1,0 +1,63 @@
+<button class="menu-button" (click)="open = !open" aria-label="Otvori izbornik">
+  ☰
+</button>
+<aside class="sidebar" [class.open]="open">
+  <a routerLink="/" class="brand" (click)="open = false"
+    ><span class="brand-mark">S</span
+    ><span>Sigurna<small>BANKA</small></span></a
+  >
+  <p class="nav-label">OSOBNO BANKARSTVO</p>
+  <nav aria-label="Glavna navigacija">
+    <a
+      routerLink="/"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive="active"
+      (click)="open = false"
+      ><span>⌂</span><em>Pregled</em></a
+    >
+    <a routerLink="/accounts" routerLinkActive="active" (click)="open = false"
+      ><span>▣</span><em>Računi</em></a
+    >
+    <a routerLink="/transfers" routerLinkActive="active" (click)="open = false"
+      ><span>⇄</span><em>Transferi</em></a
+    >
+    <a routerLink="/deposits" routerLinkActive="active" (click)="open = false"
+      ><span>↙</span><em>Uplate</em></a
+    >
+    <a
+      routerLink="/withdrawals"
+      routerLinkActive="active"
+      (click)="open = false"
+      ><span>↗</span><em>Isplate</em></a
+    >
+  </nav>
+  @if (auth.isAdmin()) {
+    <p class="nav-label admin-label">ADMINISTRACIJA</p>
+    <nav class="admin-nav" aria-label="Administracija">
+      <a
+        routerLink="/admin/users"
+        routerLinkActive="active"
+        (click)="open = false"
+        ><span>♙</span><em>Korisnici</em></a
+      >
+      <a
+        routerLink="/admin/requests"
+        routerLinkActive="active"
+        (click)="open = false"
+        ><span>▤</span><em>Zahtjevi</em></a
+      >
+    </nav>
+  }
+  <div class="profile">
+    <div class="avatar">
+      {{ auth.user()?.first_name?.[0] }}{{ auth.user()?.last_name?.[0] }}
+    </div>
+    <div>
+      <strong>{{ auth.user()?.first_name }} {{ auth.user()?.last_name }}</strong
+      ><small>{{
+        auth.user()?.role === "ADMIN" ? "Administrator" : "Klijent"
+      }}</small>
+    </div>
+    <button (click)="auth.logout()" title="Odjava">↪</button>
+  </div>
+</aside>

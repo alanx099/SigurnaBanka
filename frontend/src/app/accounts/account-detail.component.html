@@ -1,0 +1,98 @@
+<a class="back" routerLink="/accounts">← Povratak na račune</a>
+@if (error) {
+  <div class="error detail-error">{{ error }}</div>
+} @else if (!account) {
+  <div class="loading">Učitavanje detalja...</div>
+} @else {
+  <header class="page-header detail-head">
+    <div>
+      <span class="eyebrow">DETALJI RAČUNA</span>
+      <h1>{{ account.name }}</h1>
+      <p>{{ account.iban | maskedIban }}</p>
+    </div>
+    <div class="actions">
+      <button class="btn" (click)="editing = !editing">Uredi</button>
+      @if (auth.isAdmin()) {
+        <button class="btn btn-danger" (click)="remove()">Obriši</button>
+      }
+    </div>
+  </header>
+  <section class="balance-hero glass">
+    <div>
+      <span>RASPOLOŽIVO STANJE</span
+      ><strong class="money">{{
+        account.balance | currency: account.currency : "symbol" : "1.2-2" : "hr"
+      }}</strong
+      ><span class="badge" [class.blocked]="account.status !== 'ACTIVE'">{{
+        account.status
+      }}</span>
+    </div>
+    <div class="identity">
+      <small>IBAN</small><b>{{ account.iban }}</b
+      ><small>VLASNIK</small
+      ><b>{{ account.first_name }} {{ account.last_name }}</b>
+    </div>
+  </section>
+  @if (editing) {
+    <form class="glass edit form-grid" [formGroup]="form" (ngSubmit)="save()">
+      <label>Naziv<input class="input" formControlName="name" /></label>
+      @if (auth.isAdmin()) {
+        <label
+          >Vrsta<select class="input" formControlName="type">
+            <option value="CURRENT">Tekući račun</option>
+            <option value="GIRO">Žiro račun</option>
+            <option value="SAVINGS">Štedni račun</option>
+            <option value="BUSINESS">Poslovni račun</option>
+          </select></label
+        ><label
+          >Status<select class="input" formControlName="status">
+            <option value="ACTIVE">Aktivan</option>
+            <option value="BLOCKED">Blokiran</option>
+            <option value="CLOSED">Zatvoren</option>
+          </select></label
+        >
+      }
+      <div class="form-actions">
+        <button class="btn btn-primary">Spremi promjene</button>
+      </div>
+    </form>
+  }
+  <section class="glass history">
+    <div class="section-title">
+      <div>
+        <span class="eyebrow">EVIDENCIJA</span>
+        <h2>Promet po računu</h2>
+      </div>
+      <div>
+        <a class="btn" routerLink="/deposits">Nova uplata</a>
+        <a class="btn btn-primary" routerLink="/withdrawals">Nova isplata</a>
+      </div>
+    </div>
+    @for (m of movements; track m.kind + "-" + m.id) {
+      <a
+        class="movement"
+        [routerLink]="[
+          m.kind === 'DEPOSIT' ? '/deposits' : '/withdrawals',
+          m.id,
+        ]"
+        ><span [class.out]="m.kind === 'WITHDRAWAL'">{{
+          m.kind === "DEPOSIT" ? "↙" : "↗"
+        }}</span>
+        <div>
+          <b>{{
+            m.description || (m.kind === "DEPOSIT" ? "Uplata" : "Isplata")
+          }}</b
+          ><small>{{ m.created_at | date: "dd.MM.yyyy. HH:mm" }}</small>
+        </div>
+        <strong class="money" [class.in]="m.kind === 'DEPOSIT'"
+          >{{ m.kind === "DEPOSIT" ? "+" : "−"
+          }}{{
+            m.amount | currency: account.currency : "symbol" : "1.2-2" : "hr"
+          }}</strong
+        ></a
+      >
+    } @empty {
+      <div class="empty">Na računu još nema prometa.</div>
+    }
+  </section>
+}

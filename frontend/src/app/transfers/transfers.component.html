@@ -1,0 +1,145 @@
+<header class="page-header">
+  <div>
+    <span class="eyebrow">SIGURAN PRIJENOS NOVCA</span>
+    <h1>Transferi</h1>
+    <p>Pošaljite sredstva drugom korisniku Sigurne Banke u nekoliko koraka.</p>
+  </div>
+  <span class="instant">● INTERNI TRANSFER · ODMAH</span>
+</header>
+@if (error) {
+  <div class="error notice">{{ error }}</div>
+}
+@if (success) {
+  <div class="success notice">✓ {{ success }}</div>
+}
+@if (loading) {
+  <div class="loading">Priprema sigurnog transfera...</div>
+} @else {
+  <div class="transfer-layout">
+    <form class="glass transfer-form" [formGroup]="form" (ngSubmit)="send()">
+      <div class="step">
+        <span>1</span>
+        <div>
+          <small>RAČUN PLAĆANJA</small>
+          <h2>Odaberite izvor sredstava</h2>
+        </div>
+      </div>
+      <label
+        >Vaš račun
+        <select class="input" formControlName="senderAccountId">
+          <option [value]="0">Odaberite račun</option>
+          @for (a of accounts; track a.id) {
+            <option [value]="a.id">
+              {{ a.name }} —
+              {{ a.balance | currency: a.currency : "symbol" : "1.2-2" : "hr" }}
+            </option>
+          }
+        </select>
+      </label>
+      @if (selectedSource) {
+        <div class="available">
+          <span>Raspoloživo</span
+          ><strong class="money">{{
+            selectedSource.balance
+              | currency: selectedSource.currency : "symbol" : "1.2-2" : "hr"
+          }}</strong
+          ><small>{{ selectedSource.iban | maskedIban }}</small>
+        </div>
+      }
+      <div class="divider"></div>
+      <div class="step">
+        <span>2</span>
+        <div>
+          <small>PRIMATELJ</small>
+          <h2>Kome šaljete novac?</h2>
+        </div>
+      </div>
+      <label
+        >Primatelj
+        <select
+          class="input"
+          formControlName="recipientUserId"
+          (change)="recipientChanged()"
+        >
+          <option [value]="0">Odaberite korisnika</option>
+          @for (r of recipients; track r.id) {
+            <option [value]="r.id">
+              {{ r.first_name }} {{ r.last_name }} — {{ r.email }}
+            </option>
+          }
+        </select>
+      </label>
+      <label
+        >Račun primatelja
+        <select class="input" formControlName="recipientAccountId">
+          <option [value]="0">Odaberite račun primatelja</option>
+          @for (a of recipientAccounts; track a.id) {
+            <option [value]="a.id">
+              {{ a.name }} — {{ a.iban | maskedIban }}
+            </option>
+          }
+        </select>
+      </label>
+      <div class="amount-row">
+        <label
+          >Iznos (EUR)<input
+            class="input amount"
+            type="number"
+            min="0.01"
+            step="0.01"
+            formControlName="amount"
+            placeholder="0,00"
+        /></label>
+        <label
+          >Opis plaćanja<input
+            class="input"
+            formControlName="description"
+            placeholder="npr. Povrat za večeru"
+        /></label>
+      </div>
+      <button
+        class="btn btn-primary submit"
+        [disabled]="form.invalid || sending"
+      >
+        {{ sending ? "Provođenje transfera..." : "Potvrdi i pošalji novac" }}
+        <span>→</span>
+      </button>
+      <p class="secure-note">
+        ▣ Stanja oba računa mijenjaju se atomski i sigurno.
+      </p>
+    </form>
+    <section class="glass history">
+      <div class="history-head">
+        <div>
+          <span class="eyebrow">EVIDENCIJA</span>
+          <h2>Nedavni transferi</h2>
+        </div>
+        <span>{{ history.length }} UKUPNO</span>
+      </div>
+      @for (t of history; track t.id) {
+        <article class="history-row">
+          <span class="flow" [class.in]="!outgoing(t)">{{
+            outgoing(t) ? "↗" : "↙"
+          }}</span>
+          <div>
+            <strong>{{
+              outgoing(t)
+                ? t.recipient_first_name + " " + t.recipient_last_name
+                : t.sender_first_name + " " + t.sender_last_name
+            }}</strong
+            ><small
+              >{{ t.description }} ·
+              {{ t.created_at | date: "dd.MM.yyyy. HH:mm" }}</small
+            >
+          </div>
+          <b class="money" [class.in]="!outgoing(t)"
+            >{{ outgoing(t) ? "−" : "+" }}
+            {{ t.amount | currency: "EUR" : "symbol" : "1.2-2" : "hr" }}</b
+          >
+        </article>
+      } @empty {
+        <div class="empty">Još nema internih transfera.</div>
+      }
+    </section>
+  </div>
+}

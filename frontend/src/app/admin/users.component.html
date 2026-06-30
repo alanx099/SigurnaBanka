@@ -1,0 +1,52 @@
+<header class="page-header">
+  <div>
+    <span class="eyebrow">ADMINISTRACIJSKI DIO</span>
+    <h1>Upravljanje korisnicima</h1>
+    <p>Uloge, statusi i pristup korisnika na jednom sigurnom mjestu.</p>
+  </div>
+  <span class="admin-shield">♢ ADMIN PRISTUP</span>
+</header>
+@if (error) {
+  <div class="error">{{ error }}</div>
+}
+<section class="toolbar glass">
+  <input
+    class="input"
+    #query
+    (input)="search(query.value)"
+    placeholder="Pretražite ime ili e-mail..."
+  />
+  <div>
+    <small>UKUPNO KORISNIKA</small><b>{{ users.length }}</b>
+  </div>
+  <div>
+    <small>AKTIVNI</small><b class="success">{{ users.length }}</b>
+  </div>
+</section>
+@if (loading) {
+  <div class="loading">Učitavanje korisnika...</div>
+} @else {
+  <section class="user-grid">
+    @for (u of filtered; track u.id) {
+      <a class="user-card glass" [routerLink]="['/admin/users', u.id]"
+        ><div class="avatar">{{ u.first_name[0] }}{{ u.last_name[0] }}</div>
+        <div class="identity">
+          <h2>{{ u.first_name }} {{ u.last_name }}</h2>
+          <p>{{ u.email }}</p>
+          <small>Član od {{ u.created_at | date: "dd.MM.yyyy." }}</small>
+        </div>
+        <div class="tags">
+          <span class="role" [class.admin]="u.role === 'ADMIN'">{{
+            u.role
+          }}</span
+          ><span class="badge" [class.blocked]="!u.active">{{
+            u.active ? "AKTIVAN" : "NEAKTIVAN"
+          }}</span>
+        </div>
+        <span class="arrow">→</span></a
+      >
+    } @empty {
+      <div class="glass empty">Nema rezultata pretrage.</div>
+    }
+  </section>
+}

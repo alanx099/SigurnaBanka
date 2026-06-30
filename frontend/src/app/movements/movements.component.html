@@ -1,0 +1,114 @@
+<header class="page-header">
+  <div>
+    <span class="eyebrow">{{
+      kind === "deposits" ? "PRILJEVI" : "ODLJEVI"
+    }}</span>
+    <h1>{{ title }}</h1>
+    <p>
+      {{
+        kind === "deposits"
+          ? "Pregled svih zaprimljenih uplata."
+          : "Kontroliran pregled svih izvršenih isplata."
+      }}
+    </p>
+  </div>
+  <button class="btn btn-primary" (click)="showForm = !showForm">
+    ＋ Nova {{ kind === "deposits" ? "uplata" : "isplata" }}
+  </button>
+</header>
+@if (error) {
+  <div class="error notice">{{ error }}</div>
+}
+@if (success) {
+  <div class="success notice">✓ {{ success }}</div>
+}
+@if (showForm) {
+  <form
+    class="glass movement-form form-grid"
+    [formGroup]="form"
+    (ngSubmit)="create()"
+  >
+    <label
+      >Račun<select class="input" formControlName="accountId">
+        <option [value]="0">Odaberite račun</option>
+        @for (a of accounts; track a.id) {
+          <option [value]="a.id">
+            {{ a.name }} — {{ a.iban | maskedIban }}
+          </option>
+        }
+      </select></label
+    ><label
+      >Iznos (EUR)<input
+        class="input"
+        type="number"
+        min="0.01"
+        step="0.01"
+        formControlName="amount" /></label
+    ><label
+      >Opis<input
+        class="input"
+        formControlName="description"
+        placeholder="Svrha transakcije" /></label
+    ><label
+      >Referenca<input
+        class="input"
+        formControlName="reference"
+        placeholder="Opcionalno"
+    /></label>
+    <div class="form-actions full">
+      <button type="button" class="btn" (click)="showForm = false">
+        Odustani</button
+      ><button class="btn btn-primary" [disabled]="form.invalid">
+        Potvrdi {{ kind === "deposits" ? "uplatu" : "isplatu" }}
+      </button>
+    </div>
+  </form>
+}
+<section class="summary glass">
+  <div>
+    <small>UKUPNO EVIDENTIRANO</small
+    ><strong class="money">{{
+      total | currency: "EUR" : "symbol" : "1.2-2" : "hr"
+    }}</strong>
+  </div>
+  <div>
+    <small>BROJ STAVKI</small><strong>{{ items.length }}</strong>
+  </div>
+  <span class="summary-icon" [class.out]="kind === 'withdrawals'">{{
+    kind === "deposits" ? "↙" : "↗"
+  }}</span>
+</section>
+@if (loading) {
+  <div class="loading">Učitavanje prometa...</div>
+} @else {
+  <section class="glass list">
+    <div class="list-head">
+      <span>TRANSAKCIJA</span><span>RAČUN</span><span>DATUM</span
+      ><span>IZNOS</span>
+    </div>
+    @for (m of items; track m.id) {
+      <a class="list-row" [routerLink]="['/', kind, m.id]"
+        ><div>
+          <span class="movement-icon" [class.out]="kind === 'withdrawals'">{{
+            kind === "deposits" ? "↙" : "↗"
+          }}</span>
+          <p>
+            <b>{{ m.description || title.slice(0, -1) }}</b
+            ><small>{{ m.reference || "Bez reference" }}</small>
+          </p>
+        </div>
+        <span
+          >{{ m.account_name }}<small>{{ m.iban | maskedIban }}</small></span
+        ><span
+          >{{ m.created_at | date: "dd.MM.yyyy."
+          }}<small>{{ m.created_at | date: "HH:mm" }}</small></span
+        ><strong class="money" [class.in]="kind === 'deposits'"
+          >{{ kind === "deposits" ? "+" : "−" }}
+          {{ m.amount | currency: "EUR" : "symbol" : "1.2-2" : "hr" }}</strong
+        ></a
+      >
+    } @empty {
+      <div class="empty">Još nema evidentiranih stavki.</div>
+    }
+  </section>
+}

@@ -1,0 +1,121 @@
+.detail-error {
+  margin-top: 20px;
+}
+.detail-head {
+  margin-top: 22px;
+}
+.actions {
+  display: flex;
+  gap: 9px;
+}
+.balance-hero {
+  padding: 34px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background: linear-gradient(
+    115deg,
+    rgba(225, 29, 46, 0.14),
+    rgba(255, 255, 255, 0.045) 45%
+  );
+}
+.balance-hero > div:first-child {
+  display: grid;
+  gap: 8px;
+}
+.balance-hero span:not(.badge),
+.identity small {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.balance-hero strong {
+  font-size: 38px;
+}
+.identity {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 7px 22px;
+  padding-left: 30px;
+  border-left: 1px solid var(--line);
+  font-size: 12px;
+}
+.identity small {
+  text-align: right;
+}
+.edit,
+.history {
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.form-actions {
+  display: flex;
+  align-items: end;
+}
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.section-title h2 {
+  font: 700 19px Manrope;
+  margin: 4px 0;
+}
+.section-title a {
+  text-decoration: none;
+}
+.movement {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 4px;
+  border-top: 1px solid var(--line);
+  color: #fff;
+  text-decoration: none;
+}
+.movement > span {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--green);
+  background: rgba(51, 214, 159, 0.1);
+}
+.movement > span.out {
+  color: var(--red-light);
+  background: rgba(225, 29, 46, 0.1);
+}
+.movement small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+}
+.movement strong.in {
+  color: var(--green);
+}
+@media (max-width: 650px) {
+  .balance-hero {
+    align-items: start;
+    gap: 25px;
+    flex-direction: column;
+  }
+  .identity {
+    border-left: 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .section-title {
+    align-items: start;
+    gap: 18px;
+    flex-direction: column;
+  }
+  .section-title .btn {
+    display: inline-block;
+    margin: 3px;
+  }
+}

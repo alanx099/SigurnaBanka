@@ -1,0 +1,74 @@
+.detail-error {
+  margin-top: 20px;
+}
+.receipt {
+  width: min(680px, 100%);
+  margin: 25px auto;
+  padding: 40px;
+  text-align: center;
+}
+.receipt-icon {
+  margin: 0 auto 18px;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  color: var(--green);
+  background: rgba(51, 214, 159, 0.1);
+  font-size: 26px;
+}
+.receipt-icon.out {
+  color: var(--red-light);
+  background: rgba(225, 29, 46, 0.1);
+}
+.receipt h1 {
+  font: 700 24px Manrope;
+  margin: 8px;
+}
+.receipt > strong {
+  display: block;
+  font-size: 35px;
+  margin: 16px;
+}
+.receipt > strong.in {
+  color: var(--green);
+}
+.receipt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: left;
+  margin: 32px 0 24px;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.receipt-grid div {
+  padding: 18px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.receipt-grid small,
+.receipt-grid b {
+  display: block;
+}
+.receipt-grid small {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.receipt-grid b {
+  font-size: 12px;
+}
+.receipt > p {
+  color: var(--muted);
+  font-size: 11px;
+}
+@media (max-width: 550px) {
+  .receipt {
+    padding: 28px 18px;
+  }
+  .receipt-grid {
+    grid-template-columns: 1fr;
+  }
+}

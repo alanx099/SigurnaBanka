@@ -1,0 +1,118 @@
+<header class="page-header">
+  <div>
+    <span class="eyebrow">SIGURNO DIGITALNO BANKARSTVO</span>
+    <h1>{{ greeting }}, {{ auth.user()?.first_name }}.</h1>
+    <p>Evo kratkog pregleda vaših financija.</p>
+  </div>
+  <div class="secure">● Sustav je siguran</div>
+</header>
+@if (error) {
+  <div class="error">{{ error }}</div>
+} @else if (!data) {
+  <div class="loading">Učitavanje sigurnog pregleda...</div>
+} @else {
+  <section class="hero glass">
+    <div>
+      <span>UKUPNO RASPOLOŽIVO STANJE</span
+      ><strong class="money">{{
+        total | currency: "EUR" : "symbol" : "1.2-2" : "hr"
+      }}</strong
+      ><small
+        >Na {{ data.accounts.length }}
+        {{
+          data.accounts.length === 1 ? "aktivnom računu" : "aktivna računa"
+        }}</small
+      >
+    </div>
+    <div class="hero-lines"></div>
+    <a routerLink="/accounts" class="btn">Pregled računa →</a>
+  </section>
+  <section class="stats">
+    <article class="glass">
+      <span class="stat-icon green">↙</span>
+      <div>
+        <small>AKTIVNI RAČUNI</small><strong>{{ data.accounts.length }}</strong>
+        <p>U vašem vlasništvu</p>
+      </div>
+    </article>
+    <article class="glass">
+      <span class="stat-icon red">↗</span>
+      <div>
+        <small>POSLJEDNJE AKTIVNOSTI</small
+        ><strong>{{ data.recent.length }}</strong>
+        <p>Sigurno evidentirano</p>
+      </div>
+    </article>
+    <article class="glass">
+      <span class="stat-icon amber">◇</span>
+      <div>
+        <small>STATUS SIGURNOSTI</small><strong>Visok</strong>
+        <p class="success">● Nema upozorenja</p>
+      </div>
+    </article>
+  </section>
+  <div class="columns">
+    <section class="glass panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow">MOJI PROIZVODI</span>
+          <h2>Računi</h2>
+        </div>
+        <a routerLink="/accounts">Prikaži sve</a>
+      </div>
+      <div class="account-list">
+        @for (a of data.accounts.slice(0, 3); track a.id) {
+          <a [routerLink]="['/accounts', a.id]" class="account-row"
+            ><div class="account-icon">▰</div>
+            <div>
+              <strong>{{ a.name }}</strong
+              ><small>{{ a.iban | maskedIban }}</small>
+            </div>
+            <div class="right">
+              <strong class="money">{{
+                a.balance | currency: a.currency : "symbol" : "1.2-2" : "hr"
+              }}</strong
+              ><span class="badge">AKTIVAN</span>
+            </div></a
+          >
+        } @empty {
+          <div class="empty">Još nemate dodijeljen račun.</div>
+        }
+      </div>
+    </section>
+    <section class="glass panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow">TOK NOVCA</span>
+          <h2>Nedavne aktivnosti</h2>
+        </div>
+      </div>
+      <div class="activity">
+        @for (m of data.recent; track m.kind + "-" + m.id) {
+          <a
+            [routerLink]="[
+              m.kind === 'DEPOSIT' ? '/deposits' : '/withdrawals',
+              m.id,
+            ]"
+            class="activity-row"
+            ><span [class.out]="m.kind === 'WITHDRAWAL'">{{
+              m.kind === "DEPOSIT" ? "↙" : "↗"
+            }}</span>
+            <div>
+              <strong>{{
+                m.description || (m.kind === "DEPOSIT" ? "Uplata" : "Isplata")
+              }}</strong
+              ><small>{{ m.created_at | date: "dd. MMM, HH:mm" }}</small>
+            </div>
+            <b class="money" [class.negative]="m.kind === 'WITHDRAWAL'"
+              >{{ m.kind === "DEPOSIT" ? "+" : "−" }}
+              {{ m.amount | currency: "EUR" : "symbol" : "1.2-2" : "hr" }}</b
+            ></a
+          >
+        } @empty {
+          <div class="empty">Nema evidentiranih aktivnosti.</div>
+        }
+      </div>
+    </section>
+  </div>
+}

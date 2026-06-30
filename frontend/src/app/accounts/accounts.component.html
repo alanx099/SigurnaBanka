@@ -1,0 +1,190 @@
+<header class="page-header">
+  <div>
+    <span class="eyebrow">FINANCIJSKI PROIZVODI</span>
+    <h1>Računi</h1>
+    <p>Jasan pregled stanja i aktivnosti svih vaših računa.</p>
+  </div>
+  @if (auth.isAdmin()) {
+    <button class="btn btn-primary" (click)="showForm = !showForm">
+      ＋ Otvori račun korisniku
+    </button>
+  } @else {
+    <button
+      class="btn btn-primary"
+      (click)="showRequestForm = !showRequestForm"
+    >
+      ＋ Zatraži novi račun
+    </button>
+  }
+</header>
+@if (success) {
+  <div class="success request-notice">✓ {{ success }}</div>
+}
+@if (showRequestForm) {
+  <form
+    class="glass account-form form-grid"
+    [formGroup]="requestForm"
+    (ngSubmit)="submitRequest()"
+  >
+    <div class="full request-intro">
+      <span class="eyebrow">ZAHTJEV BANCI</span>
+      <h2>Koji račun želite otvoriti?</h2>
+      <p>Administrator će pregledati zahtjev i obavijestiti vas o odluci.</p>
+    </div>
+    <label
+      >Vrsta računa<select class="input" formControlName="accountType">
+        <option value="CURRENT">Tekući račun</option>
+        <option value="GIRO">Žiro račun</option>
+        <option value="SAVINGS">Štedni račun</option>
+        <option value="BUSINESS">Poslovni račun</option>
+      </select></label
+    ><label
+      >Željeni naziv računa<input
+        class="input"
+        formControlName="requestedName"
+        placeholder="npr. Moj glavni račun" /></label
+    ><label class="full"
+      >Napomena banci<textarea
+        class="input"
+        rows="3"
+        formControlName="userMessage"
+        placeholder="Opcionalno pojasnite zašto vam je račun potreban"
+      ></textarea>
+    </label>
+    <div class="form-actions full">
+      <button class="btn" type="button" (click)="showRequestForm = false">
+        Odustani</button
+      ><button class="btn btn-primary" [disabled]="requestForm.invalid">
+        Pošalji zahtjev
+      </button>
+    </div>
+  </form>
+}
+@if (error) {
+  <div class="error">{{ error }}</div>
+}
+@if (showForm) {
+  <form
+    class="glass account-form form-grid"
+    [formGroup]="form"
+    (ngSubmit)="create()"
+  >
+    <label
+      >Vlasnik računa<select class="input" formControlName="userId">
+        <option [value]="0">Odaberite korisnika</option>
+        @for (u of users; track u.id) {
+          <option [value]="u.id">
+            {{ u.first_name }} {{ u.last_name }} — {{ u.email }}
+          </option>
+        }
+      </select></label
+    ><label
+      >IBAN<input
+        class="input"
+        formControlName="iban"
+        placeholder="HR..."
+        maxlength="34" /></label
+    ><label
+      >Naziv računa<input
+        class="input"
+        formControlName="name"
+        placeholder="npr. Glavni tekući račun" /></label
+    ><label
+      >Vrsta računa<select class="input" formControlName="type">
+        <option value="CURRENT">Tekući račun</option>
+        <option value="GIRO">Žiro račun</option>
+        <option value="SAVINGS">Štedni račun</option>
+        <option value="BUSINESS">Poslovni račun</option>
+      </select></label
+    ><label
+      >Početno stanje<input
+        class="input"
+        type="number"
+        min="0"
+        formControlName="balance"
+    /></label>
+    <div class="form-actions">
+      <button class="btn" type="button" (click)="showForm = false">
+        Odustani</button
+      ><button class="btn btn-primary" [disabled]="form.invalid">
+        Otvori račun
+      </button>
+    </div>
+  </form>
+}
+@if (loading) {
+  <div class="loading">Učitavanje računa...</div>
+} @else {
+  <section class="account-grid">
+    @for (a of accounts; track a.id) {
+      <a class="account-card glass" [routerLink]="['/accounts', a.id]"
+        ><div class="card-top">
+          <span class="account-symbol">▰</span
+          ><span class="badge" [class.blocked]="a.status !== 'ACTIVE'">{{
+            a.status === "ACTIVE" ? "AKTIVAN" : a.status
+          }}</span>
+        </div>
+        <p>{{ typeLabel(a.type) }}</p>
+        <h2>{{ a.name }}</h2>
+        <code>{{ a.iban | maskedIban }}</code>
+        <div class="balance">
+          <small>RASPOLOŽIVO STANJE</small
+          ><strong class="money">{{
+            a.balance | currency: a.currency : "symbol" : "1.2-2" : "hr"
+          }}</strong>
+        </div>
+        @if (auth.isAdmin()) {
+          <small class="owner"
+            >Vlasnik: {{ a.first_name }} {{ a.last_name }}</small
+          >
+        }
+        <div class="card-foot">
+          <span>Otvoren {{ a.created_at | date: "dd.MM.yyyy." }}</span
+          ><b>Detalji →</b>
+        </div></a
+      >
+    } @empty {
+      <div class="glass empty">Nema dostupnih računa.</div>
+    }
+  </section>
+}
+@if (!auth.isAdmin() && requests.length) {
+  <section class="glass request-history">
+    <div class="request-title">
+      <span class="eyebrow">KOMUNIKACIJA S BANKOM</span>
+      <h2>Moji zahtjevi</h2>
+    </div>
+    @for (r of requests; track r.id) {
+      <article class="request-row">
+        <span class="request-kind">▤</span>
+        <div>
+          <strong
+            >{{ typeLabel(r.account_type) }} · {{ r.requested_name }}</strong
+          ><small>Predano {{ r.created_at | date: "dd.MM.yyyy. HH:mm" }}</small>
+          @if (r.admin_message) {
+            <p [class.rejected-message]="r.status === 'REJECTED'">
+              {{ r.admin_message }}
+            </p>
+          }
+        </div>
+        <span
+          class="request-status"
+          [class.approved]="r.status === 'APPROVED'"
+          [class.rejected]="r.status === 'REJECTED'"
+          >{{
+            r.status === "PENDING"
+              ? "NA OBRADI"
+              : r.status === "APPROVED"
+                ? "ODOBRENO"
+                : "ODBIJENO"
+          }}</span
+        >
+        @if (r.created_account_id) {
+          <a class="btn" [routerLink]="['/accounts', r.created_account_id]"
+            >Otvori račun →</a
+          >
+        }
+      </article>
+    }
+  </section>
+}

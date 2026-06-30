@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sigurna Banka — prezentacija projekta</title>
+    <style>
+      :root {
+        --bg: #090a0e;
+        --panel: #13151b;
+        --line: rgba(255, 255, 255, 0.11);
+        --text: #f7f7f8;
+        --muted: #979aa5;
+        --red: #e11d2e;
+        --red2: #ff5966;
+        --green: #33d69f;
+        --amber: #f4b740;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 83% 5%,
+            rgba(225, 29, 46, 0.18),
+            transparent 31%
+          ),
+          radial-gradient(
+            circle at 10% 95%,
+            rgba(125, 15, 27, 0.12),
+            transparent 30%
+          );
+        pointer-events: none;
+      }
+      .deck {
+        height: 100%;
+        position: relative;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        padding: 7vh 8vw 10vh;
+        display: grid;
+        align-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(35px);
+        transition: 0.32s ease;
+        overflow: auto;
+      }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+      .slide.past {
+        transform: translateX(-35px);
+      }
+      .eyebrow {
+        color: var(--red2);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+      }
+      .slide h1 {
+        font-size: clamp(42px, 6.2vw, 84px);
+        line-height: 1.02;
+        letter-spacing: -3px;
+        margin: 13px 0 20px;
+        max-width: 1000px;
+      }
+      .slide h2 {
+        font-size: clamp(30px, 4vw, 54px);
+        letter-spacing: -1.7px;
+        margin: 10px 0 28px;
+      }
+      .slide h3 {
+        font-size: 18px;
+        margin: 0 0 8px;
+      }
+      .lead {
+        max-width: 850px;
+        color: #b7bac3;
+        font-size: clamp(17px, 1.6vw, 23px);
+        line-height: 1.55;
+        margin: 0;
+      }
+      .red {
+        color: var(--red2);
+      }
+      .green {
+        color: var(--green);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 34px;
+      }
+      .brand-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        background: linear-gradient(145deg, var(--red), #800c18);
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: 0 12px 35px rgba(225, 29, 46, 0.3);
+      }
+      .brand b {
+        font-size: 21px;
+      }
+      .brand small {
+        display: block;
+        color: var(--muted);
+        font-size: 8px;
+        letter-spacing: 4px;
+        margin-top: 3px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 30px;
+      }
+      .chip {
+        padding: 8px 13px;
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.045);
+        color: #c5c7ce;
+        font-size: 12px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .grid.two {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .card {
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.055);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+      }
+      .card .number {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+        background: rgba(225, 29, 46, 0.14);
+        color: var(--red2);
+        font-weight: 800;
+        margin-bottom: 15px;
+      }
+      .card p,
+      .card li {
+        color: #aeb1ba;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .card p {
+        margin: 0;
+      }
+      .card ul {
+        padding-left: 18px;
+        margin: 9px 0 0;
+      }
+      .entity {
+        position: relative;
+      }
+      .entity strong {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+      .entity code {
+        display: block;
+        color: #aeb1ba;
+        font:
+          12px/1.7 ui-monospace,
+          SFMono-Regular,
+          Consolas,
+          monospace;
+      }
+      .entity.primary {
+        border-color: rgba(225, 29, 46, 0.38);
+        background: linear-gradient(
+          135deg,
+          rgba(225, 29, 46, 0.13),
+          rgba(255, 255, 255, 0.04)
+        );
+      }
+      .relations {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin: 18px 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .relations span {
+        height: 1px;
+        flex: 1;
+        max-width: 150px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--red),
+          transparent
+        );
+      }
+      .flow {
+        display: flex;
+        align-items: stretch;
+        gap: 9px;
+      }
+      .flow-step {
+        flex: 1;
+        padding: 17px 14px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.045);
+        position: relative;
+      }
+      .flow-step:not(:last-child):after {
+        content: "→";
+        position: absolute;
+        right: -12px;
+        top: 50%;
+        z-index: 2;
+        color: var(--red2);
+        font-weight: 900;
+      }
+      .flow-step b {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      .flow-step small {
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      .code {
+        padding: 18px 20px;
+        border-radius: 15px;
+        background: #07080b;
+        border: 1px solid var(--line);
+        font:
+          12px/1.65 ui-monospace,
+          SFMono-Regular,
+          Consolas,
+          monospace;
+        color: #c5c7cf;
+        white-space: pre-wrap;
+      }
+      .code .method {
+        color: var(--green);
+      }
+      .code .route {
+        color: #fff;
+      }
+      .code .guard {
+        color: var(--red2);
+      }
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.035);
+      }
+      .table th,
+      .table td {
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--line);
+        font-size: 12px;
+      }
+      .table th {
+        color: var(--muted);
+        font-size: 9px;
+        letter-spacing: 1.2px;
+      }
+      .table td:first-child {
+        color: var(--green);
+        font-family: monospace;
+      }
+      .table tr:last-child td {
+        border-bottom: 0;
+      }
+      .badge {
+        display: inline-flex;
+        padding: 5px 8px;
+        border-radius: 20px;
+        background: rgba(51, 214, 159, 0.1);
+        color: var(--green);
+        font-size: 9px;
+        font-weight: 800;
+      }
+      .badge.admin {
+        color: var(--red2);
+        background: rgba(225, 29, 46, 0.12);
+      }
+      .checklist {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 20px;
+      }
+      .check {
+        display: flex;
+        gap: 10px;
+        align-items: start;
+        padding: 11px 13px;
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+        color: #c5c7ce;
+      }
+      .check:before {
+        content: "✓";
+        color: var(--green);
+        font-weight: 900;
+      }
+      .architecture {
+        display: grid;
+        grid-template-columns: 1fr 70px 1fr 70px 1fr;
+        align-items: center;
+        text-align: center;
+      }
+      .architecture .box {
+        padding: 28px 15px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .architecture .arrow {
+        color: var(--red2);
+        font-size: 25px;
+      }
+      .architecture b {
+        display: block;
+        margin: 8px;
+      }
+      .architecture small {
+        color: var(--muted);
+      }
+      .controls {
+        position: fixed;
+        z-index: 20;
+        left: 8vw;
+        right: 8vw;
+        bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .controls button {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(20, 21, 27, 0.9);
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+      }
+      .controls button:hover {
+        border-color: rgba(225, 29, 46, 0.5);
+        background: rgba(225, 29, 46, 0.12);
+      }
+      .counter {
+        color: var(--muted);
+        font-size: 11px;
+        min-width: 48px;
+      }
+      .progress {
+        height: 2px;
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .progress span {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--red), var(--red2));
+        transition: 0.3s;
+      }
+      .hint {
+        font-size: 10px;
+        color: #656873;
+      }
+      .slide-no {
+        position: absolute;
+        right: 8vw;
+        top: 7vh;
+        color: #4f515a;
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+      .demo {
+        counter-reset: demo;
+      }
+      .demo li {
+        list-style: none;
+        counter-increment: demo;
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        gap: 12px;
+        margin: 0 0 12px;
+        color: #b4b7bf;
+        line-height: 1.5;
+      }
+      .demo li:before {
+        content: counter(demo);
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        background: rgba(225, 29, 46, 0.13);
+        color: var(--red2);
+        font-weight: 800;
+      }
+      .security-note {
+        margin-top: 20px;
+        padding: 15px 18px;
+        border-left: 3px solid var(--green);
+        background: rgba(51, 214, 159, 0.06);
+        font-size: 12px;
+        color: #b9bdc4;
+      }
+      @media (max-width: 850px) {
+        .slide {
+          padding: 70px 25px 105px;
+          align-content: start;
+        }
+        .grid,
+        .grid.two,
+        .checklist {
+          grid-template-columns: 1fr;
+        }
+        .flow {
+          flex-direction: column;
+        }
+        .flow-step:not(:last-child):after {
+          content: "↓";
+          right: auto;
+          left: 50%;
+          top: auto;
+          bottom: -17px;
+        }
+        .architecture {
+          grid-template-columns: 1fr;
+        }
+        .architecture .arrow {
+          transform: rotate(90deg);
+        }
+        .slide h1 {
+          letter-spacing: -2px;
+        }
+        .controls {
+          left: 25px;
+          right: 25px;
+        }
+        .hint {
+          display: none;
+        }
+      }
+      @media print {
+        html,
+        body {
+          overflow: visible;
+        }
+        .slide {
+          position: relative;
+          opacity: 1 !important;
+          visibility: visible !important;
+          transform: none !important;
+          page-break-after: always;
+          min-height: 100vh;
+        }
+        .controls {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck">
+      <section class="slide active">
+        <div class="slide-no">SIGURNA BANKA / 01</div>
+        <div class="brand">
+          <span class="brand-mark">S</span
+          ><span><b>Sigurna Banka</b><small>DIGITALNO BANKARSTVO</small></span>
+        </div>
+        <span class="eyebrow">PREZENTACIJA WEB APLIKACIJE</span>
+        <h1>Sigurno. Jasno.<br /><span class="red">Potpuno povezano.</span></h1>
+        <p class="lead">
+          Full-stack bankarska aplikacija izgrađena pomoću Angulara, Node.js
+          REST API-ja, PostgreSQL-a i Docker infrastrukture.
+        </p>
+        <div class="chips">
+          <span class="chip">Angular 18</span
+          ><span class="chip">Node.js + Express</span
+          ><span class="chip">PostgreSQL</span><span class="chip">JWT</span
+          ><span class="chip">Docker Compose</span>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">ARHITEKTURA / 02</div>
+        <span class="eyebrow">PREGLED SUSTAVA</span>
+        <h2>Kako aplikacija radi?</h2>
+        <div class="architecture">
+          <div class="box">
+            <span style="font-size: 30px">◫</span><b>Angular frontend</b
+            ><small>Port 4200 · korisničko sučelje</small>
+          </div>
+          <div class="arrow">→</div>
+          <div class="box">
+            <span style="font-size: 30px">⬡</span><b>Node.js REST API</b
+            ><small>Port 5000 · poslovna logika i JWT</small>
+          </div>
+          <div class="arrow">→</div>
+          <div class="box">
+            <span style="font-size: 30px">▰</span><b>PostgreSQL</b
+            ><small>Privatna Docker mreža · trajni podaci</small>
+          </div>
+        </div>
+        <div class="security-note">
+          PostgreSQL nije javno izložen. Vezan je samo na 127.0.0.1, a udaljeni
+          administratorski pristup koristi SSH tunel.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 1 / 03</div>
+        <span class="eyebrow">1. ENTITETI I VEZE</span>
+        <h2>Relacijski model banke</h2>
+        <div class="grid">
+          <div class="card entity primary">
+            <strong>users</strong
+            ><code
+              >id · BIGSERIAL PK<br />email · UNIQUE<br />password_hash<br />role
+              · USER / ADMIN<br />active · BOOLEAN</code
+            >
+          </div>
+          <div class="card entity">
+            <strong>accounts</strong
+            ><code
+              >id · BIGSERIAL PK<br />user_id · FK → users<br />iban · UNIQUE<br />type
+              · GIRO / CURRENT / ...<br />balance · NUMERIC(15,2)</code
+            >
+          </div>
+          <div class="card entity">
+            <strong>account_requests</strong
+            ><code
+              >user_id · FK → users<br />status · PENDING / ...<br />reviewed_by
+              · FK → users<br />created_account_id · FK</code
+            >
+          </div>
+          <div class="card entity">
+            <strong>deposits</strong
+            ><code
+              >account_id · FK<br />amount &gt; 0<br />description ·
+              reference<br />created_at</code
+            >
+          </div>
+          <div class="card entity">
+            <strong>withdrawals</strong
+            ><code
+              >account_id · FK<br />amount &gt; 0<br />description ·
+              reference<br />created_at</code
+            >
+          </div>
+          <div class="card entity">
+            <strong>transfers</strong
+            ><code
+              >sender_account_id · FK<br />recipient_account_id · FK<br />amount
+              &gt; 0<br />CHECK sender ≠ recipient</code
+            >
+          </div>
+        </div>
+        <div class="relations">
+          <span></span> 1 korisnik → N računa → N transakcija <span></span>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 1 / 04</div>
+        <span class="eyebrow">ISPRAVNI TIPOVI I OGRANIČENJA</span>
+        <h2>Baza čuva integritet podataka</h2>
+        <div class="grid two">
+          <div class="card">
+            <div class="number">01</div>
+            <h3>Financijski tipovi</h3>
+            <ul>
+              <li>Novac: <code>NUMERIC(15,2)</code>, ne floating point</li>
+              <li>Vrijeme: <code>TIMESTAMPTZ</code></li>
+              <li>Identifikatori: <code>BIGSERIAL</code></li>
+              <li>Valuta: <code>CHAR(3)</code></li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="number">02</div>
+            <h3>Ograničenja</h3>
+            <ul>
+              <li>Jedinstveni e-mail i IBAN</li>
+              <li>Saldo ne može biti negativan</li>
+              <li>Iznos mora biti veći od nule</li>
+              <li>Dozvoljene uloge, statusi i vrste računa</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="number">03</div>
+            <h3>Referencijalni integritet</h3>
+            <p>
+              Foreign key veze povezuju korisnike, račune, zahtjeve i promet.
+              Indeksi ubrzavaju pretragu po vlasniku računa.
+            </p>
+          </div>
+          <div class="card">
+            <div class="number">04</div>
+            <h3>Atomske operacije</h3>
+            <p>
+              Transfer koristi <code>BEGIN / COMMIT / ROLLBACK</code> i
+              zaključava oba računa. Ili se promijene oba salda ili nijedan.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 2 / 05</div>
+        <span class="eyebrow">2. ANGULAR ROUTING</span>
+        <h2>Jasna navigacija i parametrizirane rute</h2>
+        <div class="grid two">
+          <div class="code">
+            <span class="route">/</span> Dashboard
+            <span class="route">/accounts</span> Popis računa
+            <span class="route">/accounts/:id</span> Detalji računa
+            <span class="route">/transfers</span> Interni transfer
+            <span class="route">/deposits/:id</span> Detalji uplate
+            <span class="route">/withdrawals/:id</span> Detalji isplate
+          </div>
+          <div class="code">
+            <span class="route">/login</span> Prijava
+            <span class="route">/register</span> Registracija
+            <span class="route">/admin/users</span> Korisnici
+            <span class="route">/admin/users/:id</span> Profil korisnika
+            <span class="route">/admin/requests</span> Zahtjevi
+            <span class="guard">** → redirect /</span> Nepoznata ruta
+          </div>
+        </div>
+        <div class="checklist" style="margin-top: 20px">
+          <div class="check">Lazy loading standalone komponenti</div>
+          <div class="check">Glavni izbornik i aktivna stanja</div>
+          <div class="check">Desktop sidebar</div>
+          <div class="check">Mobilna bottom navigacija</div>
+          <div class="check">authGuard i adminGuard</div>
+          <div class="check">guestGuard štiti login rutu</div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 3 / 06</div>
+        <span class="eyebrow">3. CRUD OPERACIJE</span>
+        <h2>Upravljanje podacima kroz aplikaciju</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ENTITET</th>
+              <th>CREATE</th>
+              <th>READ</th>
+              <th>UPDATE</th>
+              <th>DELETE</th>
+              <th>OVLAST</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Korisnici</td>
+              <td>Registracija</td>
+              <td>Popis + detalji</td>
+              <td>Uloga, status, ime</td>
+              <td>Brisanje</td>
+              <td><span class="badge admin">ADMIN</span></td>
+            </tr>
+            <tr>
+              <td>Računi</td>
+              <td>Admin / odobrenje</td>
+              <td>Popis + detalji</td>
+              <td>Naziv, vrsta, status</td>
+              <td>Brisanje</td>
+              <td><span class="badge admin">ADMIN</span> / vlasnik</td>
+            </tr>
+            <tr>
+              <td>Zahtjevi</td>
+              <td>Korisnik šalje</td>
+              <td>Vlastiti / svi</td>
+              <td>Odobri / odbij</td>
+              <td>Arhiva</td>
+              <td>USER / <span class="badge admin">ADMIN</span></td>
+            </tr>
+            <tr>
+              <td>Uplate / isplate</td>
+              <td>Nova stavka</td>
+              <td>Popis + detalji</td>
+              <td>Ne mijenjaju se</td>
+              <td>Ne brišu se</td>
+              <td>Vlasnik / admin</td>
+            </tr>
+            <tr>
+              <td>Transferi</td>
+              <td>Pošalji novac</td>
+              <td>Obje strane</td>
+              <td>Ne mijenjaju se</td>
+              <td>Ne brišu se</td>
+              <td>Vlasnik izvora</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="muted" style="font-size: 12px; margin-top: 15px">
+          Financijski zapisi namjerno nisu klasično izmjenjivi: auditabilnost je
+          važnija od generičkog CRUD-a.
+        </p>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KORISNIČKI TOK / 07</div>
+        <span class="eyebrow">OTVARANJE RAČUNA</span>
+        <h2>Od registracije do novog proizvoda</h2>
+        <div class="flow">
+          <div class="flow-step">
+            <b>1. Registracija</b
+            ><small>E-mail, ime, prezime i jaka lozinka.</small>
+          </div>
+          <div class="flow-step">
+            <b>2. Glavni račun</b
+            ><small
+              >Automatski se otvara GIRO račun s jedinstvenim IBAN-om.</small
+            >
+          </div>
+          <div class="flow-step">
+            <b>3. Zahtjev</b
+            ><small
+              >Korisnik traži tekući, žiro, štedni ili poslovni račun.</small
+            >
+          </div>
+          <div class="flow-step">
+            <b>4. Odluka</b
+            ><small>Admin odobrava ili obavezno piše razlog odbijanja.</small>
+          </div>
+          <div class="flow-step">
+            <b>5. Obavijest</b
+            ><small
+              >Korisnik vidi status, poruku i poveznicu na novi račun.</small
+            >
+          </div>
+        </div>
+        <div class="grid two" style="margin-top: 25px">
+          <div class="card">
+            <h3 class="green">Odobrenje</h3>
+            <p>
+              API automatski generira IBAN, kreira račun i povezuje ga sa
+              zahtjevom — sve unutar jedne transakcije.
+            </p>
+          </div>
+          <div class="card">
+            <h3 class="red">Odbijanje</h3>
+            <p>
+              Administratorsko obrazloženje je obavezno i odmah se prikazuje
+              korisniku u povijesti zahtjeva.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KORISNIČKI TOK / 08</div>
+        <span class="eyebrow">TRANSFER IZMEĐU KORISNIKA</span>
+        <h2>Alan šalje administratoru 100 EUR</h2>
+        <div class="flow">
+          <div class="flow-step">
+            <b>Izvor</b
+            ><small>Alan bira samo jedan od svojih aktivnih računa.</small>
+          </div>
+          <div class="flow-step">
+            <b>Primatelj</b
+            ><small>Dropdown prikazuje druge aktivne korisnike.</small>
+          </div>
+          <div class="flow-step">
+            <b>Račun</b
+            ><small
+              >Drugi dropdown prikazuje račune odabranog primatelja.</small
+            >
+          </div>
+          <div class="flow-step">
+            <b>Provjera</b
+            ><small
+              >Vlasništvo, saldo, valuta i status provjeravaju se na
+              serveru.</small
+            >
+          </div>
+          <div class="flow-step">
+            <b>Prijenos</b
+            ><small
+              >−100 EUR Alanu, +100 EUR primatelju i zapisi prometa objema
+              stranama.</small
+            >
+          </div>
+        </div>
+        <div class="security-note">
+          Redovi oba računa zaključavaju se s <code>FOR UPDATE</code>.
+          Nedovoljno sredstava ili bilo koja greška pokreće ROLLBACK.
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 4 / 09</div>
+        <span class="eyebrow">4. AUTORIZACIJA I AUTENTIKACIJA</span>
+        <h2>Identitet, uloge i sigurna sesija</h2>
+        <div class="grid">
+          <div class="card">
+            <div class="number">A</div>
+            <h3>Registracija</h3>
+            <p>
+              Validacija e-maila, obavezni podaci i minimalno osam znakova
+              lozinke.
+            </p>
+          </div>
+          <div class="card">
+            <div class="number">B</div>
+            <h3>Hashiranje</h3>
+            <p>
+              <code>bcrypt</code> s 12 salt rundi. Baza nikad ne sprema čistu
+              lozinku.
+            </p>
+          </div>
+          <div class="card">
+            <div class="number">C</div>
+            <h3>JWT token</h3>
+            <p>
+              Sadrži ID, e-mail, ulogu i vrijeme isteka. Potpisuje ga server.
+            </p>
+          </div>
+          <div class="card">
+            <div class="number">D</div>
+            <h3>Uloge</h3>
+            <p>
+              <span class="badge">USER</span> vidi vlastite podatke.
+              <span class="badge admin">ADMIN</span> upravlja korisnicima i
+              zahtjevima.
+            </p>
+          </div>
+          <div class="card">
+            <div class="number">E</div>
+            <h3>Poruke grešaka</h3>
+            <p>
+              Razlikuju se nepostojeći korisnik, pogrešna lozinka, deaktivirani
+              račun i istekla sesija.
+            </p>
+          </div>
+          <div class="card">
+            <div class="number">F</div>
+            <h3>Životni ciklus</h3>
+            <p>
+              <code>sessionStorage</code>: refresh zadržava prijavu, zatvaranje
+              taba završava sesiju.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 5 / 10</div>
+        <span class="eyebrow">5. PIPEOVI I SERVISI</span>
+        <h2>Angular sloj za podatke</h2>
+        <div class="grid two">
+          <div class="card">
+            <h3>ApiService</h3>
+            <p>
+              Centralizira HTTP pozive za račune, korisnike, uplate, isplate,
+              transfere i zahtjeve. Komponente ne znaju detalje API URL-a.
+            </p>
+            <div class="code" style="margin-top: 13px">
+              accounts() createTransfer(data) accountRequests()
+              reviewAccountRequest(id, action)
+            </div>
+          </div>
+          <div class="card">
+            <h3>AuthService</h3>
+            <p>
+              Prijava, registracija, token, odjava, trenutni korisnik i computed
+              provjera administratorske uloge.
+            </p>
+            <div class="code" style="margin-top: 13px">
+              user = signal(...) loggedIn = computed(...) isAdmin =
+              computed(...)
+            </div>
+          </div>
+          <div class="card">
+            <h3>Custom pipe: maskedIban</h3>
+            <p>
+              Osjetljivi broj računa maskira se prema bankarskom UX pravilu.
+            </p>
+            <div class="code" style="margin-top: 13px">HR12 •••• •••• 0001</div>
+          </div>
+          <div class="card">
+            <h3>Ugrađeni pipeovi</h3>
+            <p>
+              <code>CurrencyPipe</code> i <code>DatePipe</code> koriste
+              registrirani hrvatski locale za EUR iznose, datum i vrijeme.
+            </p>
+            <div class="code" style="margin-top: 13px">
+              12.450,75 € 20. 6. 2026. 19:30
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 6 / 11</div>
+        <span class="eyebrow">6. SERVER I RESTFUL API</span>
+        <h2>Resursno oblikovane rute</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>METODA</th>
+              <th>RUTA</th>
+              <th>NAMJENA</th>
+              <th>ZAŠTITA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>POST</td>
+              <td>/api/auth/register</td>
+              <td>Registracija + glavni GIRO račun</td>
+              <td>Javno</td>
+            </tr>
+            <tr>
+              <td>POST</td>
+              <td>/api/auth/login</td>
+              <td>Prijava i izdavanje JWT-a</td>
+              <td>Javno</td>
+            </tr>
+            <tr>
+              <td>GET / POST</td>
+              <td>/api/accounts</td>
+              <td>Popis / novi račun</td>
+              <td>Token / Admin</td>
+            </tr>
+            <tr>
+              <td>GET / PATCH / DELETE</td>
+              <td>/api/accounts/:id</td>
+              <td>Detalji / izmjena / brisanje</td>
+              <td>Vlasnik / Admin</td>
+            </tr>
+            <tr>
+              <td>GET / POST</td>
+              <td>/api/account-requests</td>
+              <td>Pregled / predaja zahtjeva</td>
+              <td>Token</td>
+            </tr>
+            <tr>
+              <td>PATCH</td>
+              <td>/api/account-requests/:id</td>
+              <td>Odobrenje ili odbijanje</td>
+              <td>Admin</td>
+            </tr>
+            <tr>
+              <td>GET / POST</td>
+              <td>/api/transfers</td>
+              <td>Povijest / atomski prijenos</td>
+              <td>Token</td>
+            </tr>
+            <tr>
+              <td>GET</td>
+              <td>/api/deposits/:id</td>
+              <td>Parametrizirani detalji uplate</td>
+              <td>Vlasnik / Admin</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">KRITERIJ 7 / 12</div>
+        <span class="eyebrow">7. API ZAŠTIĆEN TOKENOM</span>
+        <h2>Zahtjev prolazi kroz više slojeva zaštite</h2>
+        <div class="flow">
+          <div class="flow-step">
+            <b>1. Interceptor</b
+            ><small>Angular automatski dodaje Authorization header.</small>
+          </div>
+          <div class="flow-step">
+            <b>2. Bearer token</b
+            ><small><code>Authorization: Bearer eyJ...</code></small>
+          </div>
+          <div class="flow-step">
+            <b>3. authenticate</b
+            ><small>Server provjerava potpis i rok JWT tokena.</small>
+          </div>
+          <div class="flow-step">
+            <b>4. Vlasništvo</b
+            ><small
+              >Provjerava se pripada li resurs prijavljenom korisniku.</small
+            >
+          </div>
+          <div class="flow-step">
+            <b>5. Uloga</b
+            ><small
+              ><code>adminOnly</code> odbija neovlaštenu administraciju.</small
+            >
+          </div>
+        </div>
+        <div class="grid two" style="margin-top: 25px">
+          <div class="code">
+            <span class="method">GET</span>
+            <span class="route">/api/accounts/42</span>
+            Authorization: Bearer &lt;JWT&gt;
+
+            <span class="guard">401</span> token nedostaje / istekao
+            <span class="guard">403</span> identitet nema ovlast
+            <span class="method">200</span> pristup dozvoljen
+          </div>
+          <div class="card">
+            <h3>Frontend + backend zaštita</h3>
+            <p>
+              Angular guard poboljšava UX, ali nije sigurnosna granica. Prava
+              zaštita uvijek se ponovno provjerava na Express serveru.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">SUČELJE / 13</div>
+        <span class="eyebrow">PREMIUM BANKARSKI UX</span>
+        <h2>Dark fintech vizualni sustav</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Glassmorphism</h3>
+            <p>
+              Tamne prozirne kartice, blur, diskretne granice i slojevita
+              dubina.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Crveno-bijeli identitet</h3>
+            <p>
+              Crvena za primarne akcije i aktivna stanja; bijela za financijske
+              vrijednosti.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Financijska čitljivost</h3>
+            <p>
+              Poravnati iznosi, hrvatski format valute, status badgevi i
+              maskirani IBAN.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Responsive</h3>
+            <p>
+              Desktop sidebar postaje mobilna bottom navigacija sa safe-area
+              podrškom.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Kontekstualni pozdrav</h3>
+            <p>
+              Dobro jutro, Dobar dan ili Dobra večer prema vremenu klijentova
+              uređaja.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Pristupačne povratne informacije</h3>
+            <p>
+              Loading, empty, success i error stanja te jasne potvrde
+              osjetljivih akcija.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">DEMONSTRACIJA / 14</div>
+        <span class="eyebrow">PREDLOŽENI DEMO SCENARIJ</span>
+        <h2>Kako prezentirati aplikaciju?</h2>
+        <ol class="demo">
+          <li>
+            <span
+              >Registrirati novog korisnika i pokazati automatski kreiran
+              „Glavni račun” vrste GIRO.</span
+            >
+          </li>
+          <li>
+            <span
+              >Odjaviti se i pokazati poruke za pogrešan e-mail i pogrešnu
+              lozinku.</span
+            >
+          </li>
+          <li><span>Kao korisnik predati zahtjev za tekući račun.</span></li>
+          <li>
+            <span
+              >Kao administrator otvoriti „Zahtjevi”, odobriti ga i pokazati
+              automatski IBAN.</span
+            >
+          </li>
+          <li>
+            <span>Kao administrator pokazati CRUD korisnika i računa.</span>
+          </li>
+          <li>
+            <span
+              >Uplatiti demo sredstva korisniku, zatim poslati 100 EUR drugom
+              korisniku.</span
+            >
+          </li>
+          <li>
+            <span
+              >Na oba profila pokazati ažurirano stanje i promet računa.</span
+            >
+          </li>
+          <li>
+            <span
+              >Otvoriti detalj preko rute <code>/accounts/:id</code> i
+              demonstrirati custom IBAN pipe.</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section class="slide">
+        <div class="slide-no">ZAKLJUČAK / 15</div>
+        <span class="eyebrow">ISPUNJENI ZAHTJEVI</span>
+        <h2>Sigurna Banka je potpuna full-stack aplikacija</h2>
+        <div class="checklist">
+          <div class="check">6 smislenih povezanih entiteta</div>
+          <div class="check">Angular routing i parametrizirane rute</div>
+          <div class="check">CRUD operacije i bankarski workflowi</div>
+          <div class="check">Registracija, bcrypt i JWT prijava</div>
+          <div class="check">USER i ADMIN razine pristupa</div>
+          <div class="check">Servisi, interceptor i custom pipe</div>
+          <div class="check">RESTful API za sve ključne resurse</div>
+          <div class="check">API zaštićen tokenom i vlasništvom</div>
+          <div class="check">Atomski transferi i integritet baze</div>
+          <div class="check">Responsive premium dark sučelje</div>
+        </div>
+        <p class="lead" style="margin-top: 28px">
+          Rezultat je aplikacija koja ne demonstrira samo tehnologiju, nego
+          smislen i siguran digitalni bankarski proces.
+        </p>
+      </section>
+    </main>
+    <footer class="controls">
+      <button id="prev" aria-label="Prethodni slajd">←</button
+      ><button id="next" aria-label="Sljedeći slajd">→</button
+      ><span class="counter" id="counter">01 / 15</span>
+      <div class="progress"><span id="progress"></span></div>
+      <span class="hint">← → navigacija · F cijeli zaslon</span>
+    </footer>
+    <script>
+      const slides = [...document.querySelectorAll(".slide")],
+        counter = document.querySelector("#counter"),
+        progress = document.querySelector("#progress");
+      let index = 0;
+      function show(next) {
+        index = Math.max(0, Math.min(slides.length - 1, next));
+        slides.forEach((s, i) => {
+          s.classList.toggle("active", i === index);
+          s.classList.toggle("past", i < index);
+        });
+        counter.textContent =
+          String(index + 1).padStart(2, "0") +
+          " / " +
+          String(slides.length).padStart(2, "0");
+        progress.style.width = ((index + 1) / slides.length) * 100 + "%";
+      }
+      document.querySelector("#prev").onclick = () => show(index - 1);
+      document.querySelector("#next").onclick = () => show(index + 1);
+      addEventListener("keydown", (e) => {
+        if (["ArrowRight", "PageDown", " "].includes(e.key)) {
+          e.preventDefault();
+          show(index + 1);
+        }
+        if (["ArrowLeft", "PageUp"].includes(e.key)) {
+          e.preventDefault();
+          show(index - 1);
+        }
+        if (e.key.toLowerCase() === "f")
+          document.documentElement.requestFullscreen?.();
+      });
+      let startX = 0;
+      addEventListener("touchstart", (e) => (startX = e.touches[0].clientX), {
+        passive: true,
+      });
+      addEventListener(
+        "touchend",
+        (e) => {
+          const d = e.changedTouches[0].clientX - startX;
+          if (Math.abs(d) > 60) show(index + (d < 0 ? 1 : -1));
+        },
+        { passive: true },
+      );
+      show(0);
+    </script>
+  </body>
+</html>

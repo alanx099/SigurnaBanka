@@ -1,0 +1,45 @@
+<section class="auth-page">
+  <div class="auth-orb"></div>
+  <div class="auth-brand">
+    <span>S</span><strong>Sigurna<small>BANKA</small></strong>
+  </div>
+  <div class="auth-card glass">
+    <div class="lock">⌾</div>
+    <p class="eyebrow">ZAŠTIĆENI PRISTUP</p>
+    <h1>Dobro došli natrag.</h1>
+    <p class="intro">
+      Upravljajte svojim financijama sigurno, jasno i bez čekanja.
+    </p>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label
+        >E-mail adresa<input
+          class="input"
+          type="email"
+          formControlName="email"
+          placeholder="ime@primjer.hr"
+          autocomplete="email" /></label
+      ><label
+        >Lozinka<input
+          class="input"
+          type="password"
+          formControlName="password"
+          placeholder="Vaša lozinka"
+          autocomplete="current-password"
+      /></label>
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      }
+      <button
+        class="btn btn-primary submit"
+        [disabled]="loading || form.invalid"
+      >
+        {{ loading ? "Provjera..." : "Sigurna prijava" }} <span>→</span>
+      </button>
+    </form>
+    <p class="switch">
+      Nemate korisnički račun? <a routerLink="/register">Otvorite račun</a>
+    </p>
+    <div class="security">▣ Vaši podaci zaštićeni su token autentikacijom</div>
+  </div>
+  <p class="demo">Demo administrator: admin&#64;sigurnabanka.hr / Admin123!</p>
+</section>

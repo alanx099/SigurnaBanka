@@ -1,0 +1,140 @@
+.notice {
+  margin-bottom: 15px;
+}
+.success.notice {
+  padding: 11px 13px;
+  background: rgba(51, 214, 159, 0.08);
+  border: 1px solid rgba(51, 214, 159, 0.2);
+  border-radius: 10px;
+}
+.movement-form {
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+}
+.summary {
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+.summary small {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+.summary strong {
+  display: block;
+  font: 700 22px Manrope;
+  margin-top: 6px;
+}
+.summary > div + div {
+  padding-left: 25px;
+  border-left: 1px solid var(--line);
+}
+.summary-icon,
+.movement-icon {
+  display: grid;
+  place-items: center;
+  color: var(--green);
+  background: rgba(51, 214, 159, 0.1);
+  border-radius: 13px;
+}
+.summary-icon {
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+}
+.summary-icon.out,
+.movement-icon.out {
+  color: var(--red-light);
+  background: rgba(225, 29, 46, 0.1);
+}
+.list {
+  overflow: hidden;
+}
+.list-head,
+.list-row {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 0.7fr 0.7fr;
+  align-items: center;
+  gap: 15px;
+}
+.list-head {
+  padding: 15px 22px;
+  color: #686b75;
+  font-size: 9px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--line);
+}
+.list-head span:last-child {
+  text-align: right;
+}
+.list-row {
+  padding: 16px 22px;
+  color: #e9e9eb;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  transition: 0.2s;
+}
+.list-row:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+.list-row > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.movement-icon {
+  min-width: 36px;
+  height: 36px;
+}
+.list-row p {
+  margin: 0;
+}
+.list-row small {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  margin-top: 4px;
+}
+.list-row > strong {
+  text-align: right;
+}
+.list-row > strong.in {
+  color: var(--green);
+}
+@media (max-width: 800px) {
+  .list-head {
+    display: none;
+  }
+  .list-row {
+    grid-template-columns: 1fr auto;
+  }
+  .list-row > span {
+    display: none;
+  }
+  .summary {
+    grid-template-columns: 1fr 1fr;
+  }
+  .summary-icon {
+    display: none;
+  }
+}
+@media (max-width: 500px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+  .summary > div + div {
+    padding: 15px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
